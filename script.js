@@ -5,71 +5,56 @@ if ("serviceWorker" in navigator) {
     .catch((err) => console.log("SW registration failed: ", err));
 }
 
-// Базовые данные (используются, если jobs.json не загрузится)
-let jobsData = [
-  {
-    id: 1,
-    title: "Курьер пешком",
-    source: "Яндекс Еда",
-    pay: "от 3 500 ₽/день",
-    city: "Казань",
-    type: "courier",
-    schedule: "Свободный график",
-    experience: "Без опыта",
-    date: "Сегодня",
-    url: "https://ya.ru/eda?ref=affiliate_id",
-  },
-];
-
-const cities = [
-  "Москва",
-  "Санкт-Петербург",
-  "Казань",
-  "Екатеринбург",
-  "Новосибирск",
-  "Нижний Новгород",
-  "Самара",
-  "Ростов-на-Дону",
-  "Владивосток",
-  "Армавир",
-];
+// Базовые данные (пустой массив)
+let jobsData = [];
+// Города (будут заполнены из jobs.json)
+let cities = ["Казань"];
 
 let currentCity = "Казань";
 let currentFilter = "all";
 
-// Загрузка jobs.json (если файла нет, используем базовый jobsData)
+// Загрузка jobs.json
 async function loadJobs() {
   try {
     const response = await fetch("jobs.json");
     if (!response.ok) throw new Error("Network response was not ok");
     const data = await response.json();
+
     if (data && data.jobs && data.jobs.length > 0) {
       jobsData = data.jobs;
-      console.log("Загружены свежие вакансии из jobs.json");
+      console.log("✅ Загружено вакансий из jobs.json:", jobsData.length);
+
+      // АВТОМАТИЧЕСКИ СОБИРАЕМ ГОРОДА ИЗ JOBS.JSON
+      const citySet = new Set();
+      jobsData.forEach((job) => citySet.add(job.city));
+      cities = Array.from(citySet).sort();
+      console.log("✅ Доступные города:", cities);
+    } else {
+      console.log("jobs.json пуст или неверный формат");
     }
   } catch (error) {
-    console.log(
-      "Используем встроенные данные (jobs.json не найден или пуст)",
-      error,
-    );
+    console.log("❌ Ошибка загрузки jobs.json:", error);
   }
 }
 
 // Инициализация приложения
 document.addEventListener("DOMContentLoaded", async function () {
-  await loadJobs(); // Сначала грузим вакансии
-  renderJobs();
-  renderCities();
-  setupFilters();
+  await loadJobs(); // Сначала грузим вакансии и города
 
-  // Загрузка сохранённого города при старте
+  // Проверяем, есть ли сохранённый город
   const savedCity = localStorage.getItem("selectedCity");
-  if (savedCity) {
+  if (savedCity && cities.includes(savedCity)) {
     currentCity = savedCity;
-    document.getElementById("current-city").textContent = savedCity;
-    document.getElementById("city-confirm").style.display = "none";
-    renderJobs();
+  } else if (cities.length > 0) {
+    currentCity = cities[0]; // Берём первый город из списка
   }
+
+  document.getElementById("current-city").textContent = currentCity;
+  document.getElementById("city-confirm").style.display = "none";
+
+  renderCities();
+  renderJobs();
+  setupFilters();
 });
 
 // Отрисовка вакансий

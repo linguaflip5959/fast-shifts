@@ -1,4 +1,64 @@
 {
-	"jobs": []
-	}
-)
+  "jobs": [
+    {
+      "id": 101,
+      "title": "Выездной специалист в ВТБ",
+      "source": "Workle",
+      "pay": "150000-165000 ₽",
+      "city": "Пермь",
+      "type": "courier",
+      "schedule": "Свободный график",
+      "experience": "Без опыта",
+      "date": "Сегодня",
+      "url": "https://workle.ru/"
+    },
+    {
+      "id": 102,
+      "title": "Выездной специалист в ВТБ",
+      "source": "Workle",
+      "pay": "150000-165000 ₽",
+      "city": "Красноярск",
+      "type": "courier",
+      "schedule": "Свободный график",
+      "experience": "Без опыта",
+      "date": "Сегодня",
+      "url": "https://workle.ru/"
+    },
+    {
+      "id": 103,
+      "title": "Выездной специалист в ВТБ",
+      "source": "Workle",
+      "pay": "150000-165000 ₽",
+      "city": "Казань",
+      "type": "courier",
+      "schedule": "Свободный график",
+      "experience": "Без опыта",
+      "date": "Сегодня",
+      "url": "https://workle.ru/"
+    },
+    {
+      "id": 104,
+      "title": "Выездной специалист в ВТБ",
+      "source": "Workle",
+      "pay": "125000-140000 ₽",
+      "city": "Новокузнецк",
+      "type": "courier",
+      "schedule": "Свободный график",
+      "experience": "Без опыта",
+      "date": "Сегодня",
+      "url": "https://workle.ru/"
+    },
+    {
+      "id": 105,
+      "title": "Выездной специалист в ВТБ",
+      "source": "Workle",
+      "pay": "125000-140000 ₽",
+      "city": "Курск",
+      "type": "courier",
+      "schedule": "Свободный график",
+      "experience": "Без опыта",
+      "date": "Сегодня",
+      "url": "https://workle.ru/"
+    }
+  ]
+}
