@@ -1,0 +1,17 @@
+{
+  "name": "Быстрые смены",
+  "short_name": "Смены",
+  "description": "Подработка в твоём городе",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#667eea",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

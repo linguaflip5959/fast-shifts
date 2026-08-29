@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Быстрые смены — подработка в твоём городе</title>
+    <!-- Подключаем стили и манифест -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Шапка -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                ⚡ Быстрые смены
+            </div>
+            <button class="city-btn" onclick="openCityModal()">
+                📍 <span id="current-city">Казань</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Плашка подтверждения города -->
+    <div class="city-confirm" id="city-confirm">
+        <div class="city-confirm-text">
+            Мы определили, что вы из <strong>Казани</strong>. Всё верно?
+        </div>
+        <div class="city-confirm-buttons">
+            <button class="btn-yes" onclick="confirmCity()">Да</button>
+            <button class="btn-no" onclick="openCityModal()">Нет</button>
+        </div>
+    </div>
+
+    <!-- Фильтры по типу работы -->
+    <div class="filters">
+        <button class="filter-btn active" data-filter="all">Все</button>
+        <button class="filter-btn" data-filter="courier">🚴 Курьеры</button>
+        <button class="filter-btn" data-filter="warehouse">📦 Склады</button>
+        <button class="filter-btn" data-filter="loader">💪 Грузчики</button>
+        <button class="filter-btn" data-filter="kitchen">🍳 Кухня</button>
+        <button class="filter-btn" data-filter="promo">📢 Промо</button>
+    </div>
+
+    <!-- Список вакансий -->
+    <div class="jobs-container">
+        <div class="jobs-header">
+            <div class="jobs-title">Актуальные вакансии</div>
+            <div class="jobs-count" id="jobs-count">0 предложений</div>
+        </div>
+
+        <div class="jobs-grid" id="jobs-list">
+            <!-- Карточки вакансий будут добавляться через JS -->
+        </div>
+    </div>
+
+    <!-- Модальное окно выбора города -->
+    <div class="modal" id="city-modal">
+        <div class="modal-content">
+            <div class="modal-title">Выберите ваш город</div>
+            <input type="text" class="city-search" placeholder="Поиск города..." id="city-search">
+            <div class="city-list" id="city-list">
+                <!-- Города будут добавляться через JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Подключаем скрипты -->
+    <script src="script.js"></script>
+    <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js');
+  }
+</script>
+</body>
+</html>
