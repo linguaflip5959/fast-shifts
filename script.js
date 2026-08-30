@@ -59,19 +59,19 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 // Отрисовка вакансий
 function renderJobs() {
-  const jobsList = document.getElementById("jobs-list");
-  const jobsCount = document.getElementById("jobs-count");
+    const jobsList = document.getElementById('jobs-list');
+    const jobsCount = document.getElementById('jobs-count');
+    
+    const filteredJobs = jobsData.filter(job => {
+        const cityMatch = job.city === currentCity;
+        const typeMatch = currentFilter === 'all' || job.type === currentFilter;
+        return cityMatch && typeMatch;
+    });
 
-  const filteredJobs = jobsData.filter((job) => {
-    const cityMatch = job.city === currentCity;
-    const typeMatch = currentFilter === "all" || job.type === currentFilter;
-    return cityMatch && typeMatch;
-  });
+    jobsCount.textContent = `${filteredJobs.length} предложений`;
 
-  jobsCount.textContent = `${filteredJobs.length} предложений`;
-
-  if (filteredJobs.length === 0) {
-    jobsList.innerHTML = `
+    if (filteredJobs.length === 0) {
+        jobsList.innerHTML = `
             <div class="empty-state">
                 <div class="empty-state-icon">📭</div>
                 <div class="empty-state-title">В городе ${currentCity} пока нет вакансий</div>
@@ -81,13 +81,11 @@ function renderJobs() {
                 <button class="btn-partner" onclick="window.open('https://workle.ru', '_blank')">Workle</button>
             </div>
         `;
-    return;
-  }
+        return;
+    }
 
-  jobsList.innerHTML = filteredJobs
-    .map(
-      (job) => `
-        <div class="job-card">
+    jobsList.innerHTML = filteredJobs.map(job => `
+        <div class="job-card" onclick="openJobModal(${job.id})" style="cursor: pointer;">
             <div class="job-header">
                 <div>
                     <div class="job-title">${job.title}</div>
@@ -102,20 +100,17 @@ function renderJobs() {
             </div>
             <div class="job-footer">
                 <div class="job-date">Обновлено: ${job.date}</div>
-                <button class="btn-apply" onclick="applyJob('${job.url}')">
-                    Откликнуться
+                <button class="btn-apply" onclick="event.stopPropagation(); openJobModal(${job.id})">
+                    Подробнее
                 </button>
             </div>
         </div>
-    `,
-    )
-    .join("");
+    `).join('');
 }
 
 function applyJob(url, city) {
     let finalUrl = url;
     
-    // Если в ссылке уже есть вопросительный знак, добавляем через &, иначе через ?
     if (finalUrl.includes('?')) {
         finalUrl += `&w_sub1=pwa_app&w_sub2=${encodeURIComponent(city)}`;
     } else {
@@ -180,6 +175,46 @@ document.getElementById("city-search").addEventListener("input", function (e) {
     `,
     )
     .join("");
+});
+
+function openJobModal(id) {
+    const job = jobsData.find(j => j.id === id);
+    if (!job) return;
+    
+    const modalContent = document.getElementById('job-modal-content');
+    // Если описания нет, выводим запасной текст
+    const description = job.description || "Описание вакансии пока не добавлено, но условия отличные! Нажмите кнопку ниже, чтобы перейти к официальной заявке.";
+    
+    modalContent.innerHTML = `
+        <button class="btn-close-modal" onclick="closeJobModal()">✕</button>
+        <div class="job-modal-header">
+            <div class="job-modal-title">${job.title}</div>
+            <div class="job-source">🔗 ${job.source}</div>
+        </div>
+        <div class="job-modal-pay">${job.pay}</div>
+        <div class="job-modal-tags">
+            <div class="job-tag">📍 ${job.city}</div>
+            <div class="job-tag">⏰ ${job.schedule}</div>
+            <div class="job-tag">✅ ${job.experience}</div>
+        </div>
+        <div class="job-modal-description">${description}</div>
+        <button class="btn-modal-apply" onclick="applyJob('${job.url}', '${job.city}')">
+            Откликнуться
+        </button>
+    `;
+    
+    document.getElementById('job-modal').classList.add('active');
+}
+
+function closeJobModal() {
+    document.getElementById('job-modal').classList.remove('active');
+}
+
+// Закрытие при клике вне окна
+document.getElementById('job-modal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        this.classList.remove('active');
+    }
 });
 
 function setupFilters() {

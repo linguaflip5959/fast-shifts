@@ -1,6 +1,6 @@
 {
   "jobs": [
-    {
+        {
       "id": 101,
       "title": "Выездной специалист в ВТБ",
       "source": "Workle",
@@ -10,7 +10,8 @@
       "schedule": "Свободный график",
       "experience": "Без опыта",
       "date": "Сегодня",
-      "url": "https://workle.ru/"
+      "url": "https://workle.ru/",
+      "description": "Приглашаем автокурьеров для доставки продуктов банка ВТБ клиентам.\n\nЧто нужно делать:\n- Доставка карт и документов клиентам.\n- Консультация по продуктам банка.\n\nЧто мы предлагаем:\n- Официальное трудоустройство.\n- Свободный график.\n- Высокий доход от 150 000 ₽.\n\nТребования:\n- Наличие автомобиля.\n- Желание зарабатывать."
     },
     {
       "id": 102,
@@ -22,7 +23,7 @@
       "schedule": "Свободный график",
       "experience": "Без опыта",
       "date": "Сегодня",
-      "url": "https://workle.ru/"
+      "url": "https://advt.pro/product/ProductId~01K9Q656PGPX8B5JBHW8GXCHB3!ExecutorId~01HE07E41XF7X1M3537Y95P5FP!UserId~01HE07E3NX5JJ7ARFH4ZTCAT72!LegacyUserId~4342156?w_source=menu"
     },
     {
       "id": 103,
@@ -34,7 +35,7 @@
       "schedule": "Свободный график",
       "experience": "Без опыта",
       "date": "Сегодня",
-      "url": "https://workle.ru/"
+      "url": "https://advt.pro/product/ProductId~01K9Q656PGPX8B5JBHW8GXCHB3!ExecutorId~01HE07E41XF7X1M3537Y95P5FP!UserId~01HE07E3NX5JJ7ARFH4ZTCAT72!LegacyUserId~4342156?w_source=menu"
     },
     {
       "id": 104,
@@ -46,7 +47,7 @@
       "schedule": "Свободный график",
       "experience": "Без опыта",
       "date": "Сегодня",
-      "url": "https://workle.ru/"
+      "url": "https://advt.pro/product/ProductId~01K9Q656PGPX8B5JBHW8GXCHB3!ExecutorId~01HE07E41XF7X1M3537Y95P5FP!UserId~01HE07E3NX5JJ7ARFH4ZTCAT72!LegacyUserId~4342156?w_source=menu"
     },
     {
       "id": 105,
@@ -58,7 +59,7 @@
       "schedule": "Свободный график",
       "experience": "Без опыта",
       "date": "Сегодня",
-      "url": "https://workle.ru/"
+      "url": "https://advt.pro/product/ProductId~01K9Q656PGPX8B5JBHW8GXCHB3!ExecutorId~01HE07E41XF7X1M3537Y95P5FP!UserId~01HE07E3NX5JJ7ARFH4ZTCAT72!LegacyUserId~4342156?w_source=menu"
     }
   ]
 }
