@@ -8,7 +8,7 @@ if ("serviceWorker" in navigator) {
 // Базовые данные (пустой массив)
 let jobsData = [];
 // Города (будут заполнены из jobs.json)
-let cities = ["Казань"];
+let cities = ["Москва", "Санкт-Петербург", "Казань", "Екатеринбург", "Новосибирск", "Нижний Новгород", "Самара", "Ростов-на-Дону", "Владивосток", "Армавир"];
 
 let currentCity = "Казань";
 let currentFilter = "all";
@@ -24,11 +24,18 @@ async function loadJobs() {
       jobsData = data.jobs;
       console.log("✅ Загружено вакансий из jobs.json:", jobsData.length);
 
-      // АВТОМАТИЧЕСКИ СОБИРАЕМ ГОРОДА ИЗ JOBS.JSON
-      const citySet = new Set();
-      jobsData.forEach((job) => citySet.add(job.city));
-      cities = Array.from(citySet).sort();
-      console.log("✅ Доступные города:", cities);
+       // АВТОМАТИЧЕСКИ ДОБАВЛЯЕМ ГОРОДА ИЗ JOBS.JSON К БАЗОВЫМ
+            if (jobsData.length > 0) {
+                const citySet = new Set(cities); // Сохраняем уже существующие города
+                jobsData.forEach((job) => {
+                    // Добавляем только реальные города, пропуская "Россия" и т.д.
+                    if (job.city && !["Россия", "Удаленная работа", "Все города"].includes(job.city)) {
+                        citySet.add(job.city);
+                    }
+                });
+                cities = Array.from(citySet).sort();
+                console.log("✅ Доступные города:", cities);
+            }
     } else {
       console.log("jobs.json пуст или неверный формат");
     }
@@ -38,24 +45,69 @@ async function loadJobs() {
 }
 
 // Инициализация приложения
-document.addEventListener("DOMContentLoaded", async function () {
-  await loadJobs(); // Сначала грузим вакансии и города
+document.addEventListener('DOMContentLoaded', async function () {
+    await loadJobs(); // Сначала грузим вакансии и города
 
-  // Проверяем, есть ли сохранённый город
-  const savedCity = localStorage.getItem("selectedCity");
-  if (savedCity && cities.includes(savedCity)) {
-    currentCity = savedCity;
-  } else if (cities.length > 0) {
-    currentCity = cities[0]; // Берём первый город из списка
-  }
-
-  document.getElementById("current-city").textContent = currentCity;
-  document.getElementById("city-confirm").style.display = "none";
-
-  renderCities();
-  renderJobs();
-  setupFilters();
+    const savedCity = localStorage.getItem('selectedCity');
+    
+    if (savedCity && cities.includes(savedCity)) {
+        // Если город уже сохранен ранее, используем его
+        currentCity = savedCity;
+        updateUI();
+    } else {
+        // Если города нет, пытаемся определить по IP
+        detectCityByIP();
+    }
 });
+
+// Функция обновления интерфейса после выбора города
+function updateUI() {
+    document.getElementById("current-city").textContent = currentCity;
+    document.getElementById("city-confirm").style.display = "none";
+    
+    // Обновляем текст в плашке подтверждения
+    const confirmText = document.querySelector('.city-confirm-text strong');
+    if (confirmText) confirmText.textContent = currentCity;
+    
+    renderCities();
+    renderJobs();
+    setupFilters();
+}
+
+// Определение города по IP (через бесплатный сервис)
+function detectCityByIP() {
+    // Показываем плашку с геолокацией
+    document.getElementById("city-confirm").style.display = "flex";
+    const confirmText = document.querySelector('.city-confirm-text');
+    if (confirmText) confirmText.innerHTML = "Определяем ваш город...";
+
+    fetch('https://get.geojs.io/v1/ip/geo.json')
+        .then(response => response.json())
+        .then(data => {
+            let detectedCity = data.city || data.region || "Москва";
+            
+            // Если города нет в нашей базе, проверяем, есть ли он в вакансиях
+            // Если нет, оставляем как есть, юзер сможет выбрать руками
+            if (!cities.includes(detectedCity)) {
+                cities.push(detectedCity);
+            }
+            
+            currentCity = detectedCity;
+            document.getElementById('current-city').textContent = currentCity;
+            
+            // Обновляем текст в плашке
+            if (confirmText) confirmText.innerHTML = `Мы определили, что вы из <strong>${currentCity}</strong>. Всё верно?`;
+            
+            renderCities();
+            renderJobs();
+            setupFilters();
+        })
+        .catch(error => {
+            console.log("Не удалось определить IP, по умолчанию Москва");
+            currentCity = "Москва"; // Фолбэк, если интернет плохой или сервис лежит
+            updateUI();
+        });
+}
 
 // Отрисовка вакансий
 function renderJobs() {
@@ -63,7 +115,9 @@ function renderJobs() {
     const jobsCount = document.getElementById('jobs-count');
     
     const filteredJobs = jobsData.filter(job => {
-        const cityMatch = job.city === currentCity;
+        // Если вакансия глобальная (Россия, Удаленка, Все города) — показываем её везде
+        const isGlobal = job.city === "Россия" || job.city === "Удаленная работа" || job.city === "Все города";
+        const cityMatch = isGlobal || job.city === currentCity;
         const typeMatch = currentFilter === 'all' || job.type === currentFilter;
         return cityMatch && typeMatch;
     });
@@ -127,8 +181,14 @@ function confirmCity() {
 }
 
 function openCityModal() {
-  document.getElementById("city-modal").classList.add("active");
-  document.getElementById("city-confirm").style.display = "none";
+    document.getElementById('city-modal').classList.add('active');
+    document.getElementById('city-confirm').style.display = 'none';
+    
+    // Очищаем поле поиска
+    document.getElementById('city-search').value = '';
+    
+    // Заново отрисовываем полный список городов, чтобы сбросить старый поиск
+    renderCities(); 
 }
 
 document.getElementById("city-modal").addEventListener("click", function (e) {
@@ -138,16 +198,12 @@ document.getElementById("city-modal").addEventListener("click", function (e) {
 });
 
 function renderCities() {
-  const cityList = document.getElementById("city-list");
-  cityList.innerHTML = cities
-    .map(
-      (city) => `
+    const cityList = document.getElementById('city-list');
+    cityList.innerHTML = cities.map(city => `
         <div class="city-item" onclick="selectCity('${city}')">
             ${city}
         </div>
-    `,
-    )
-    .join("");
+    `).join('');
 }
 
 function selectCity(city) {
@@ -159,22 +215,33 @@ function selectCity(city) {
   localStorage.setItem("selectedCity", city);
 }
 
-document.getElementById("city-search").addEventListener("input", function (e) {
-  const searchTerm = e.target.value.toLowerCase();
-  const filteredCities = cities.filter((city) =>
-    city.toLowerCase().includes(searchTerm),
-  );
-
-  const cityList = document.getElementById("city-list");
-  cityList.innerHTML = filteredCities
-    .map(
-      (city) => `
+document.getElementById('city-search').addEventListener('input', function(e) {
+    const searchTerm = e.target.value.trim();
+    const searchLower = searchTerm.toLowerCase();
+    const cityList = document.getElementById('city-list');
+    
+    // Ищем совпадения по базе
+    const filteredCities = cities.filter(city => city.toLowerCase().includes(searchLower));
+    
+    let html = filteredCities.map(city => `
         <div class="city-item" onclick="selectCity('${city}')">
             ${city}
         </div>
-    `,
-    )
-    .join("");
+    `).join('');
+    
+    // Если ввели 3 и более символов, и такого города нет в базе — даем выбрать вручную
+    if (searchTerm.length >= 3) {
+        const exactMatch = cities.some(c => c.toLowerCase() === searchLower);
+        if (!exactMatch) {
+            html += `
+                <div class="city-item" style="background: rgba(16, 185, 129, 0.1); color: #047857; font-weight: 800; border: 1px solid #6ee7b7;" onclick="selectCity('${searchTerm}')">
+                    Выбрать: ${searchTerm}
+                </div>
+            `;
+        }
+    }
+    
+    cityList.innerHTML = html;
 });
 
 function openJobModal(id) {
