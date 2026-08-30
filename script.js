@@ -112,9 +112,18 @@ function renderJobs() {
     .join("");
 }
 
-function applyJob(url) {
-  console.log("Клик по вакансии:", url);
-  window.open(url, "_blank");
+function applyJob(url, city) {
+    let finalUrl = url;
+    
+    // Если в ссылке уже есть вопросительный знак, добавляем через &, иначе через ?
+    if (finalUrl.includes('?')) {
+        finalUrl += `&w_sub1=pwa_app&w_sub2=${encodeURIComponent(city)}`;
+    } else {
+        finalUrl += `?w_sub1=pwa_app&w_sub2=${encodeURIComponent(city)}`;
+    }
+    
+    console.log('Переход по ссылке с метками:', finalUrl);
+    window.open(finalUrl, '_blank');
 }
 
 function confirmCity() {
