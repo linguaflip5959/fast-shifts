@@ -1,17 +1,35 @@
 {
-  "name": "Быстрые смены",
+  "id": "/fast-shifts/",
+  "name": "Быстрые смены — подработка",
   "short_name": "Смены",
-  "description": "Подработка в твоём городе",
-  "start_url": "/",
+  "description": "Приложение для быстрой подработки в твоём городе. Вакансии курьера, кладовщика, грузчика, повара и промоутера. Без опыта, гибкий график, высокий доход.",
+  "start_url": "/fast-shifts/",
+  "scope": "/fast-shifts/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#667eea",
+  "background_color": "#f0faf3",
+  "theme_color": "#047857",
+  "orientation": "portrait",
   "icons": [
     {
-      "src": "icon.png",
+      "src": "icon192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshot1.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Лента вакансий"
     }
   ]
 }

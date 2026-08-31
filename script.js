@@ -1,8 +1,7 @@
 // Регистрация Service Worker для PWA
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker
-    .register("/sw.js")
-    .catch((err) => console.log("SW registration failed: ", err));
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/fast-shifts/sw.js')
+        .catch(err => console.log('SW registration failed: ', err));
 }
 
 // Базовые данные (пустой массив)
@@ -115,7 +114,6 @@ function renderJobs() {
     const jobsCount = document.getElementById('jobs-count');
     
     const filteredJobs = jobsData.filter(job => {
-        // Если вакансия глобальная (Россия, Удаленка, Все города) — показываем её везде
         const isGlobal = job.city === "Россия" || job.city === "Удаленная работа" || job.city === "Все города";
         const cityMatch = isGlobal || job.city === currentCity;
         const typeMatch = currentFilter === 'all' || job.type === currentFilter;
@@ -127,23 +125,20 @@ function renderJobs() {
     if (filteredJobs.length === 0) {
         jobsList.innerHTML = `
             <div class="empty-state">
-                <div class="empty-state-icon">📭</div>
-                <div class="empty-state-title">В городе ${currentCity} пока нет вакансий</div>
-                <div class="empty-state-text">Но вы можете зарегистрироваться напрямую в сервисах:</div>
-                <button class="btn-partner" onclick="window.open('https://ya.ru/eda', '_blank')">Яндекс Еда</button>
-                <button class="btn-partner" onclick="window.open('https://samokat.ru', '_blank')">Самокат</button>
-                <button class="btn-partner" onclick="window.open('https://workle.ru', '_blank')">Workle</button>
+                <div class="empty-state-icon">🔍</div>
+                <div class="empty-state-title">Вакансий не найдено</div>
+                <div class="empty-state-text">В выбранной категории или городе пока нет предложений. Попробуйте сбросить фильтры или выбрать другой город.</div>
+                <button class="btn-partner" onclick="resetFilters()">Сбросить фильтры</button>
             </div>
         `;
         return;
     }
 
     jobsList.innerHTML = filteredJobs.map(job => `
-        <div class="job-card" onclick="openJobModal(${job.id})" style="cursor: pointer;">
+        <div class="job-card" onclick="openJobModal('${job.id}')" style="cursor: pointer;">
             <div class="job-header">
                 <div>
                     <div class="job-title">${job.title}</div>
-                    <div class="job-source">🔗 ${job.source}</div>
                 </div>
             </div>
             <div class="job-pay">${job.pay}</div>
@@ -154,7 +149,7 @@ function renderJobs() {
             </div>
             <div class="job-footer">
                 <div class="job-date">Обновлено: ${job.date}</div>
-                <button class="btn-apply" onclick="event.stopPropagation(); openJobModal(${job.id})">
+                <button class="btn-apply" onclick="event.stopPropagation(); openJobModal('${job.id}')">
                     Подробнее
                 </button>
             </div>
@@ -244,19 +239,18 @@ document.getElementById('city-search').addEventListener('input', function(e) {
     cityList.innerHTML = html;
 });
 
+// ---------- Модалка деталей вакансии ----------
 function openJobModal(id) {
-    const job = jobsData.find(j => j.id === id);
+    const job = jobsData.find(j => String(j.id) === String(id));
     if (!job) return;
-    
+
     const modalContent = document.getElementById('job-modal-content');
-    // Если описания нет, выводим запасной текст
     const description = job.description || "Описание вакансии пока не добавлено, но условия отличные! Нажмите кнопку ниже, чтобы перейти к официальной заявке.";
-    
+
     modalContent.innerHTML = `
         <button class="btn-close-modal" onclick="closeJobModal()">✕</button>
         <div class="job-modal-header">
             <div class="job-modal-title">${job.title}</div>
-            <div class="job-source">🔗 ${job.source}</div>
         </div>
         <div class="job-modal-pay">${job.pay}</div>
         <div class="job-modal-tags">
@@ -269,7 +263,7 @@ function openJobModal(id) {
             Откликнуться
         </button>
     `;
-    
+
     document.getElementById('job-modal').classList.add('active');
 }
 
@@ -283,6 +277,14 @@ document.getElementById('job-modal').addEventListener('click', function(e) {
         this.classList.remove('active');
     }
 });
+
+function resetFilters() {
+    currentFilter = 'all';
+    const filterButtons = document.querySelectorAll(".filter-btn");
+    filterButtons.forEach(btn => btn.classList.remove('active'));
+    document.querySelector('.filter-btn[data-filter="all"]').classList.add('active');
+    renderJobs();
+}
 
 function setupFilters() {
   const filterButtons = document.querySelectorAll(".filter-btn");

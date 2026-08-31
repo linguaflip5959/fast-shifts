@@ -185,24 +185,41 @@ body {
 
 /* Фильтры */
 .filters {
-    display: flex; gap: 8px; padding: 0 16px;
-    max-width: 1200px; margin: 0 auto 18px;
-    overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    display: inline-flex; /* Вот оно! Заставляем контейнер быть шириной с кнопки */
+    gap: 8px;
+    padding: 2px 16px;
+    width: 100%; /* Занимаем весь экран, чтобы было откуда скроллить */
+    max-width: 1200px;
+    margin: 0 auto 18px;
+    overflow-x: auto;
+    overflow-y: hidden; /* Прячем вертикальный скролл */
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
 }
+
 .filters::-webkit-scrollbar { display: none; }
 
 .filter-btn {
     background: rgba(255, 255, 255, 0.85);
     border: 1.5px solid var(--green-100);
     color: var(--ink-soft);
-    padding: 9px 18px; border-radius: 999px;
-    font-family: var(--font-body); font-size: 14px; font-weight: 700;
-    cursor: pointer; white-space: nowrap; transition: all 0.2s ease;
+    padding: 9px 18px;
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    flex: 0 0 auto; /* Бронебойная команда: не расти, не сжиматься, быть своего размера */
+    transition: all 0.2s ease;
     box-shadow: 0 3px 8px rgba(5, 150, 105, 0.08);
 }
+
 .filter-btn:hover:not(.active) {
     border-color: var(--green-300); color: var(--green-600); background: var(--green-50);
 }
+
 .filter-btn.active {
     background: linear-gradient(135deg, #34d399 0%, #059669 100%);
     color: white; border-color: transparent;
