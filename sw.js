@@ -1,42 +1,81 @@
-const CACHE_NAME = 'fast-shifts-v2';
-const urlsToCache = ['./', './index.html', './style.css', './script.js', './jobs.json', './icon.png'];
+/* ============================================================
+   БЫСТРЫЕ СМЕНЫ — Service Worker v4
+   Ревизия вакансий: чистка мёртвых офферов (ВТБ, Лавка, Купер-аренда),
+   Ozon и Яндекс.Еда подняты наверх, обновлены script.js/style.css
+   (чипы «Колл-центр»/«Разное», город в w_sub2). Бамп кэша обязателен:
+   свои файлы отдаются cache-first, иначе пользователи останутся на старых.
+   ============================================================ */
 
-self.addEventListener('install', event => {
+const CACHE_NAME = 'fast-shifts-v4';
+
+const CORE_ASSETS = [
+  './',
+  './index.html',
+  './style.css',
+  './script.js',
+  './manifest.json',
+  './icon192.png',
+  './icon512.png'
+];
+
+// Установка: кэшируем основные файлы (allSettled — не падаем, если чего-то нет)
+self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      // Кэшируем файлы по одному, чтобы один битый не сломил всё приложение
-      return Promise.allSettled(
-        urlsToCache.map(url => cache.add(url))
-      );
-    })
+    caches.open(CACHE_NAME)
+      .then((cache) => Promise.allSettled(CORE_ASSETS.map((url) => cache.add(url))))
+      .then(() => self.skipWaiting())
   );
-  self.skipWaiting(); // Активируем новый SW сразу
 });
 
-self.addEventListener('activate', event => {
+// Активация: подчищаем старые версии кэша и сразу перехватываем управление
+self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.filter(name => name !== CACHE_NAME).map(name => caches.delete(name))
-      );
-    })
+    caches.keys()
+      .then((keys) => Promise.all(
+        keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
+      ))
+      .then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
-self.addEventListener('fetch', event => {
-  const requestUrl = new URL(event.request.url);
-  
-  // jobs.json всегда берем из сети, чтобы ручные обновления сразу работали
-  if (requestUrl.pathname.endsWith('/jobs.json')) {
-    event.respondWith(fetch(event.request));
+self.addEventListener('fetch', (event) => {
+  const req = event.request;
+  if (req.method !== 'GET') return;
+
+  const url = new URL(req.url);
+
+  // jobs.json — всегда свежий из сети; офлайн — отдаём последнюю копию из кэша
+  if (url.pathname.endsWith('/jobs.json')) {
+    event.respondWith(
+      fetch(req)
+        .then((res) => {
+          const copy = res.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
+          return res;
+        })
+        .catch(() => caches.match(req))
+    );
     return;
   }
-  
-  // Остальное берем из кэша, если есть, иначе из сети
-  event.respondWith(
-    caches.match(event.request).then(response => {
-      return response || fetch(event.request);
-    })
-  );
+
+  // Шрифты с CDN — кэшируем при первой загрузке, дальше работают офлайн
+  if (url.origin === 'https://cdn.jsdelivr.net') {
+    event.respondWith(
+      caches.match(req).then((cached) =>
+        cached || fetch(req).then((res) => {
+          const copy = res.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
+          return res;
+        })
+      )
+    );
+    return;
+  }
+
+  // Свои файлы — сначала кэш (мгновенный старт), потом сеть
+  if (url.origin === self.location.origin) {
+    event.respondWith(
+      caches.match(req).then((cached) => cached || fetch(req))
+    );
+  }
 });

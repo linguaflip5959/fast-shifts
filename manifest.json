@@ -1,14 +1,14 @@
 {
+  "name": "Быстрые смены",
+  "short_name": "Быстрые смены",
+  "description": "Подработка рядом с домом: курьеры, склады, грузчики, кухня. Быстрые смены в вашем городе.",
   "id": "/fast-shifts/",
-  "name": "Быстрые смены — подработка",
-  "short_name": "Смены",
-  "description": "Приложение для быстрой подработки в твоём городе. Вакансии курьера, кладовщика, грузчика, повара и промоутера. Без опыта, гибкий график, высокий доход.",
-  "start_url": "/fast-shifts/",
   "scope": "/fast-shifts/",
+  "start_url": "/fast-shifts/",
   "display": "standalone",
-  "background_color": "#f0faf3",
-  "theme_color": "#047857",
   "orientation": "portrait",
+  "theme_color": "#0D182A",
+  "background_color": "#F7F5F0",
   "icons": [
     {
       "src": "icon192.png",
@@ -20,7 +20,7 @@
       "src": "icon512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any"
     }
   ],
   "screenshots": [
@@ -29,7 +29,7 @@
       "sizes": "1080x1920",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Лента вакансий"
+      "description": "Лента вакансий с фильтрами по категориям"
     }
   ]
 }
