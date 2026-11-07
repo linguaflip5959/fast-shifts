@@ -125,7 +125,7 @@ button{font-family:var(--font-body);}
   border:1px solid var(--line-strong);
   display:flex;align-items:center;justify-content:center;
 }
-.logo-mark svg{width:15px;height:15px;fill:var(--gold-text);}
+.logo-mark svg{width:21px;height:21px;fill:var(--gold-text);}
 .logo-text{display:flex;flex-direction:column;line-height:1.15;min-width:0;}
 .logo-name{
   font-family:var(--font-display);font-size:17px;font-weight:700;
@@ -517,7 +517,7 @@ button{font-family:var(--font-body);}
   .header-content{gap:10px;}
   .logo{gap:8px;}
   .logo-mark{width:27px;height:27px;border-radius:8px;}
-  .logo-mark svg{width:13px;height:13px;}
+  .logo-mark svg{width:19px;height:19px;}
   .logo-name{font-size:16px;}
   .theme-toggle{width:36px;height:36px;}
   .header-actions{gap:6px;}
