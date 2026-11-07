@@ -447,6 +447,24 @@ button{font-family:var(--font-body);}
   font-size:14.5px;color:var(--text-soft);line-height:1.75;
   margin-bottom:28px;white-space:pre-line;font-weight:500;
 }
+/* Строка «Ссылки проверены в Яндекс Браузере» — нативная партнёрская подпись */
+.ad-note{
+  font-size:11.5px;font-weight:500;color:var(--muted);letter-spacing:.3px;
+  margin:-16px 0 22px;
+}
+.ad-note a{color:inherit;text-decoration:underline;text-underline-offset:2px;}
+.ad-note a:hover{color:var(--text-soft);}
+.ad-mark{
+  display:inline-block;margin-left:7px;padding:1px 6px;
+  border:1px solid currentColor;border-radius:6px;
+  font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;
+  opacity:.6;vertical-align:1px;
+}
+.ad-erid{
+  display:block;margin-top:3px;
+  font-size:9px;font-weight:400;letter-spacing:.2px;
+  opacity:.55;user-select:all;word-break:break-all;
+}
 .btn-modal-apply{
   width:100%;display:flex;align-items:center;justify-content:center;gap:9px;
   background:linear-gradient(135deg,var(--gold-btn-1),var(--gold-btn-2));

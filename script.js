@@ -55,6 +55,13 @@ const GLOBAL_CITIES = ["Россия","Удаленная работа","Все 
 const TYPE_LABELS = { courier:"Курьеры", warehouse:"Склады", loader:"Грузчики", kitchen:"Кухня", promo:"Промо", retail:"Торговля", call_center:"Колл-центр", other:"Разное" };
 const TYPE_ALIASES = { courier:"курьер", warehouse:"склад", loader:"грузчик", kitchen:"кухн", promo:"промо" };
 
+// --- Партнёрская ссылка Яндекс Дистрибуции: Яндекс Браузер ---
+// Показывается в модалке вакансии строкой «Ссылки проверены в Яндекс Браузере».
+// Слово «Яндекс Браузере» — партнёрская ссылка; рядом обязательна пометка «Реклама»
+// и erid-токен креатива (маркировка по ФЗ «О рекламе», ст. 18.1).
+const BROWSER_AD_ERID = '5jtCeReNx12oak2tUyNEwv6';
+const BROWSER_AD_URL = 'https://redirect.appmetrica.yandex.com/serve/606560040802878424?partner_id=831050&appmetrica_js_redirect=0&clid=15546215&banerid=1315546216&full=0&erid=' + BROWSER_AD_ERID;
+
 // --- Утилиты ---
 function escapeHtml(str){
   return String(str ?? "").replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
@@ -344,6 +351,7 @@ function openJobModal(id){
     </div>
     <div class="job-modal-divider"></div>
     <div class="job-modal-description">${escapeHtml(description)}</div>
+    <div class="ad-note">Ссылки проверены в <a href="${BROWSER_AD_URL.replace(/&/g, '&amp;')}" target="_blank" rel="noopener nofollow">Яндекс Браузере</a><span class="ad-mark">Реклама</span><span class="ad-erid">erid: ${BROWSER_AD_ERID}</span></div>
     <button class="btn-modal-apply" id="btn-job-apply">${escapeHtml(job.cta || 'Откликнуться')} ${ICON.arrow}</button>`;
 
   document.getElementById('job-modal-close').addEventListener('click', closeJobModal);
