@@ -60,7 +60,10 @@
   --modal-grad:linear-gradient(170deg, var(--surface) 0%, var(--surface-2) 60%);
 }
 
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+*{margin:0;padding:0;box-sizing:border-box;}
+/* Примечание: -webkit-tap-highlight-color больше не задаётся в CSS —
+   Firefox помечал его как «Некорректное имя свойства». Теперь свойство
+   применяется из script.js только в браузерах, которые его реально поддерживают. */
 html{scrollbar-color:var(--scroll-thumb) var(--scroll-track);}
 body{
   font-family:var(--font-body);
@@ -113,14 +116,16 @@ button{font-family:var(--font-body);}
   max-width:1100px;margin:0 auto;
   display:flex;align-items:center;justify-content:space-between;gap:12px;
 }
-.logo{display:flex;align-items:center;gap:11px;text-decoration:none;min-width:0;}
+.logo{display:flex;align-items:center;gap:10px;min-width:0;}
+/* Иконка-молния: маленькая, спокойная (без золотого градиента и свечения) —
+   в одном стиле с кнопками темы и города */
 .logo-mark{
-  width:38px;height:38px;border-radius:11px;flex:0 0 auto;
-  background:linear-gradient(140deg,var(--gold-btn-1) 0%,var(--gold) 45%,var(--gold-btn-2) 100%);
+  width:30px;height:30px;border-radius:9px;flex:0 0 auto;
+  background:var(--surface-2);
+  border:1px solid var(--line-strong);
   display:flex;align-items:center;justify-content:center;
-  box-shadow:var(--shadow-gold), inset 0 1px 0 rgba(255,255,255,.35);
 }
-.logo-mark svg{width:19px;height:19px;fill:var(--gold-btn-text);}
+.logo-mark svg{width:15px;height:15px;fill:var(--gold-text);}
 .logo-text{display:flex;flex-direction:column;line-height:1.15;min-width:0;}
 .logo-name{
   font-family:var(--font-display);font-size:17px;font-weight:700;
@@ -253,6 +258,7 @@ button{font-family:var(--font-body);}
 
 .job-card{
   position:relative;
+  display:flex;flex-direction:column;
   background:var(--card-grad);
   border:1px solid var(--line);
   border-radius:var(--r-card);
@@ -299,6 +305,7 @@ button{font-family:var(--font-body);}
 .job-footer{
   display:flex;justify-content:space-between;align-items:center;gap:12px;
   padding-top:14px;border-top:1px solid var(--line);
+  margin-top:auto;
 }
 .job-date{font-size:11.5px;font-weight:500;color:var(--muted);letter-spacing:.3px;}
 .btn-apply{
@@ -508,8 +515,9 @@ button{font-family:var(--font-body);}
 @media (max-width:400px){
   .header{padding:12px 14px;}
   .header-content{gap:10px;}
-  .logo{gap:9px;}
-  .logo-mark{width:36px;height:36px;}
+  .logo{gap:8px;}
+  .logo-mark{width:27px;height:27px;border-radius:8px;}
+  .logo-mark svg{width:13px;height:13px;}
   .logo-name{font-size:16px;}
   .theme-toggle{width:36px;height:36px;}
   .header-actions{gap:6px;}

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" id="meta-theme" content="#0D182A">
+<meta name="theme-color" id="meta-theme" content="#F7F5F0">
 <title>Быстрые смены — подработка в твоём городе</title>
 <meta name="description" content="Быстрые смены — подработка рядом с домом: курьеры, склады, грузчики, кухня. Актуальные предложения в вашем городе.">
 
@@ -12,15 +12,16 @@
 <link rel="icon" type="image/png" sizes="192x192" href="icon192.png">
 <link rel="apple-touch-icon" href="icon192.png">
 
-<!-- Анти-вспышка: применяем сохранённую тему до отрисовки -->
+<!-- Анти-вспышка: применяем сохранённую тему до отрисовки.
+     Тема по умолчанию (первый визит) — светлая. -->
 <script>
 (function(){
   try{
     var t = localStorage.getItem('fs-theme');
-    if(!t){ t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark'; }
+    if(!t){ t = 'light'; }
     document.documentElement.dataset.theme = t;
     document.getElementById('meta-theme').content = (t === 'light') ? '#F7F5F0' : '#0D182A';
-  }catch(e){ document.documentElement.dataset.theme = 'dark'; }
+  }catch(e){ document.documentElement.dataset.theme = 'light'; }
 })();
 </script>
 
@@ -45,7 +46,7 @@
 <!-- ================= ШАПКА ================= -->
 <header class="header">
   <div class="header-content">
-    <a class="logo" href="#" aria-label="Быстрые смены">
+    <div class="logo">
       <span class="logo-mark">
         <svg viewBox="0 0 24 24"><path d="M13 2 4.5 13.5H11L9.5 22 19 9.5h-6.5L13 2z"/></svg>
       </span>
@@ -53,7 +54,7 @@
         <span class="logo-name">Быстрые смены</span>
         <span class="logo-tag">работа рядом</span>
       </span>
-    </a>
+    </div>
     <div class="header-actions">
       <button class="theme-toggle" id="theme-toggle" aria-label="Переключить тему">
         <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">

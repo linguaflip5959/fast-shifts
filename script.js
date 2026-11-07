@@ -9,6 +9,14 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
     .catch(err => console.log('SW registration failed:', err));
 }
 
+// --- Отключение серой вспышки при тапе (Android) ---
+// Свойство нестандартное: задаём только в браузерах с реальной поддержкой,
+// чтобы Firefox не сыпал в консоль «Некорректное имя свойства» из CSS-файла.
+// -webkit-tap-highlight-color наследуется, поэтому достаточно задать его на <html>.
+if (window.CSS && CSS.supports('-webkit-tap-highlight-color', 'transparent')) {
+  document.documentElement.style.setProperty('-webkit-tap-highlight-color', 'transparent');
+}
+
 // --- Тема (Dark / Light) ---
 const THEME_KEY = 'fs-theme';
 function applyTheme(theme){
@@ -18,7 +26,7 @@ function applyTheme(theme){
   try { localStorage.setItem(THEME_KEY, theme); } catch(e){}
 }
 document.getElementById('theme-toggle').addEventListener('click', function(){
-  const cur = document.documentElement.dataset.theme || 'dark';
+  const cur = document.documentElement.dataset.theme || 'light';
   const next = (cur === 'light') ? 'dark' : 'light';
   applyTheme(next);
 });
