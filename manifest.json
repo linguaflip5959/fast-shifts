@@ -26,7 +26,7 @@
   "screenshots": [
     {
       "src": "screenshot1.png",
-      "sizes": "1080x1920",
+      "sizes": "450x800",
       "type": "image/png",
       "form_factor": "narrow",
       "description": "Лента вакансий с фильтрами по категориям"
