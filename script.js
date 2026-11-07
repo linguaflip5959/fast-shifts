@@ -241,12 +241,12 @@ document.getElementById('jobs-list').addEventListener('keydown', function(e){
 });
 
 // --- Отклик с метками w_sub1/w_sub2 ---
-function applyJob(url, city){
+function applyJob(url, city, cta){
   let finalUrl = url;
   const params = `w_sub1=pwa_app&w_sub2=${encodeURIComponent(city)}`;
   finalUrl += finalUrl.includes('?') ? `&${params}` : `?${params}`;
   console.log('Переход по ссылке с метками:', finalUrl);
-  showToast('Переходим к форме отклика…');
+  showToast(cta ? 'Открываем…' : 'Переходим к форме отклика…');
   // Открываем сразу, в момент клика — иначе блокировщик всплывающих окон может порезать переход
   window.open(finalUrl, '_blank');
 }
@@ -344,12 +344,13 @@ function openJobModal(id){
     </div>
     <div class="job-modal-divider"></div>
     <div class="job-modal-description">${escapeHtml(description)}</div>
-    <button class="btn-modal-apply" id="btn-job-apply">Откликнуться ${ICON.arrow}</button>`;
+    <button class="btn-modal-apply" id="btn-job-apply">${escapeHtml(job.cta || 'Откликнуться')} ${ICON.arrow}</button>`;
 
   document.getElementById('job-modal-close').addEventListener('click', closeJobModal);
   // w_sub2 = фактический город пользователя (для глобальных карточек «Россия»
   // раньше уходило слово «Россия» и гео в статистике терялось)
-  document.getElementById('btn-job-apply').addEventListener('click', () => applyJob(job.url, currentCity));
+  // job.cta — свой текст кнопки для промо-карточек (напр. «Установить»)
+  document.getElementById('btn-job-apply').addEventListener('click', () => applyJob(job.url, currentCity, job.cta));
   document.getElementById('job-modal').classList.add('active');
   document.body.style.overflow = 'hidden';
 }
