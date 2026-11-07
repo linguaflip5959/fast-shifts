@@ -249,6 +249,12 @@ document.getElementById('jobs-list').addEventListener('keydown', function(e){
 
 // --- Отклик с метками w_sub1/w_sub2 ---
 function applyJob(url, city, cta){
+  // Заглушка ссылки оффера (TODO_…): карточка ещё без партнёрской ссылки —
+  // честный тост вместо битого перехода. Убирается вместе с заменой url в jobs.json.
+  if (!url || url.startsWith('TODO')){
+    showToast('Ссылка на отклик скоро появится');
+    return;
+  }
   let finalUrl = url;
   const params = `w_sub1=pwa_app&w_sub2=${encodeURIComponent(city)}`;
   finalUrl += finalUrl.includes('?') ? `&${params}` : `?${params}`;
